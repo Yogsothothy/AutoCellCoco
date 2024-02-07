@@ -3,7 +3,6 @@ package com.coco.view;
 import com.coco.celldata.CellField;
 import com.coco.celldata.LifeCell;
 
-import java.lang.reflect.Field;
 
 /**
  * ClassName:Viewer

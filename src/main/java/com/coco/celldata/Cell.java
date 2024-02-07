@@ -56,7 +56,7 @@ public abstract class Cell {
 
     /**
      * 使当前细胞的状态改变至和目标细胞一致
-     * @param tempCell
+     * @param tempCell 目标细胞
      */
     abstract public void copy(Cell tempCell);
 }

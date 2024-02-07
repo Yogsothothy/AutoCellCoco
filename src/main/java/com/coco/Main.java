@@ -1,6 +1,5 @@
 package com.coco;
 
-import com.coco.celldata.Cell;
 import com.coco.celldata.CellField;
 import com.coco.celldata.LifeCell;
 import com.coco.controller.RoundController;
