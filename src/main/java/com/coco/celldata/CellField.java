@@ -15,11 +15,11 @@ public class CellField {
     /**
      * field的宽
      */
-    private int width = 7;
+    private int width = 60;
     /**
      * field的高
      */
-    private int height = 7;
+    private int height = 60;
     /**
      * 用于存放Cell的容器
      */

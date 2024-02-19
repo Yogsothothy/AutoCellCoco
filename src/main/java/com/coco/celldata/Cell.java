@@ -23,21 +23,25 @@ public abstract class Cell {
      * 细胞自身的纵坐标
      */
     int y;
+    /**
+     * 当前细胞的状态
+     */
+    int status;
 
     /**
      * 在一回合中每个细胞都会调用一次该方法
      */
-    abstract public void cellRule();
+    abstract public boolean cellStrategy();
 
     /**
      * 每回合开始前调用一次的方法
      */
-    abstract public void beforeRoundRule();
+    abstract public void beforeRoundStrategy();
 
     /**
      * 每回合结束后调用一次的方法
      */
-    abstract public void afterRoundRule();
+    abstract public void afterRoundStrategy();
 
     /**
      * 创建一个坐标为(x,y)的细胞
@@ -48,6 +52,8 @@ public abstract class Cell {
         this.x = x;
         this.y = y;
     }
+    abstract public int getX();
+    abstract public int getY();
 
     /**
      * 初始化时调用的方法
@@ -59,4 +65,5 @@ public abstract class Cell {
      * @param tempCell 目标细胞
      */
     abstract public void copy(Cell tempCell);
+    abstract public int getStatus();
 }

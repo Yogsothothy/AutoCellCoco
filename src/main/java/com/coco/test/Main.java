@@ -1,8 +1,8 @@
-package com.coco;
+package com.coco.test;
 
 import com.coco.celldata.CellField;
 import com.coco.celldata.LifeCell;
-import com.coco.controller.RoundController;
+import com.coco.service.RoundService;
 import com.coco.view.Viewer;
 
 /**
@@ -16,7 +16,7 @@ import com.coco.view.Viewer;
  */
 public class Main {
     public static void main(String[] args) {
-        RoundController roundController = new RoundController();
+        RoundService roundController = new RoundService();
         CellField field = CellField.getInstance();
         Viewer viewer = new Viewer();
         field.fieldIni(LifeCell.class);

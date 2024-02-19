@@ -10,10 +10,20 @@ package com.coco.celldata;
  * @Version 1.0
  */
 public class LifeCell extends Cell {
-    private boolean status = false;
+    private int status = 0;
 
     public LifeCell(int x, int y) {
         super(x, y);
+    }
+
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
     }
 
     @Override
@@ -23,41 +33,45 @@ public class LifeCell extends Cell {
 
     @Override
     public void copy(Cell tempCell) {
-        if (status != ((LifeCell)tempCell).getStatus()){
+        if (status != ((LifeCell) tempCell).getStatus()) {
             changeStatus();
         }
     }
 
     @Override
-    public void cellRule() {
+    public boolean cellStrategy() {
         int count = getNeighbors();
+        boolean flag = false;
         //存活时的情况
-        if (status) {
+        if (status != 0) {
             //周围细胞数为2，3时，继续存活，否则死掉
             if (count < 2 || count > 3) {
                 changeStatus();
+                flag = true;
             }
         }
         //死亡时的情况
-        if (!status) {
+        if (status == 0) {
             //周围细胞数为3时复活
             if (count == 3) {
                 changeStatus();
+                flag = true;
             }
         }
+        return flag;
     }
 
     @Override
-    public void beforeRoundRule() {
+    public void beforeRoundStrategy() {
 
     }
 
     @Override
-    public void afterRoundRule() {
+    public void afterRoundStrategy() {
 
     }
 
-    public boolean getStatus() {
+    public int getStatus() {
         return status;
     }
 
@@ -66,7 +80,7 @@ public class LifeCell extends Cell {
         for (int x = this.x - 1; x <= this.x + 1; x++) {
             for (int y = this.y - 1; y <= this.y + 1; y++) {
                 if (!(x == this.x && y == this.y) && (x >= 0 && y >= 0) && (x < field.getWidth() && y < field.getHeight())) {
-                    if (((LifeCell) field.getCell(x, y)).getStatus()) {
+                    if (field.getCell(x, y).getStatus() != 0) {
                         count++;
                     }
                 }
@@ -76,6 +90,6 @@ public class LifeCell extends Cell {
     }
 
     private void changeStatus() {
-        status = !status;
+        status = status == 0 ? 1 : 0;
     }
 }

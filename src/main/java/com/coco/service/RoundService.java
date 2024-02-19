@@ -1,6 +1,10 @@
-package com.coco.controller;
+package com.coco.service;
 
+import com.coco.celldata.Cell;
 import com.coco.celldata.CellField;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ClassName:RoundController
@@ -11,7 +15,7 @@ import com.coco.celldata.CellField;
  * @Create 2024/2/7 12:38
  * @Version 1.0
  */
-public class RoundController {
+public class RoundService {
     /**
      * 获取CellField单例
      */
@@ -19,16 +23,22 @@ public class RoundController {
 
     /**
      * 元胞自动机每轮的演化
+     * @return 状态变化过的细胞集合
      */
-    public void next() {
-        field.getTempCell(0, 0).beforeRoundRule();
+    public List<Cell> next() {
+        List<Cell> cells = new ArrayList<>();
+        field.getTempCell(0, 0).beforeRoundStrategy();
         for (int x = 0; x < field.getWidth(); x++) {
             for (int y = 0; y < field.getHeight(); y++) {
-                field.getTempCell(x, y).cellRule();
+                Cell tempCell = field.getTempCell(x, y);
+                if (tempCell.cellStrategy()){
+                    cells.add(tempCell);
+                }
             }
         }
-        field.getTempCell(0, 0).afterRoundRule();
+        field.getTempCell(0, 0).afterRoundStrategy();
         field.save();
+        return cells;
     }
 
     /**
@@ -37,9 +47,10 @@ public class RoundController {
     public void randomIni() {
         for (int x = 0; x < field.getWidth(); x++) {
             for (int y = 0; y < field.getHeight(); y++) {
-//                if (Math.random() < 0.2){
-//                    field.getCell(x,y).randomIni();
-//                }
+                if (Math.random() < 0.2){
+                    field.getCell(x,y).randomIni();
+                    field.getTempCell(x, y).randomIni();
+                }
                 if (x == 2 && y == 2) {
                     field.getCell(x, y).randomIni();
                     field.getTempCell(x, y).randomIni();
