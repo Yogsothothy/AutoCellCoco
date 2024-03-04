@@ -1,50 +1,41 @@
 package com.coco.application;
 
 import com.coco.application.components.CellFieldViewer;
+import com.coco.application.components.ToolBar;
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 /**
  * ClassName: Application
  * Package: com.coco.application
- * Description:
+ * Description:程序的主界面
+ *             TODO 用一个BorderPane来容纳所有组件，CellFieldViewer会被放置在中间
+ *                  还需要实现的功能有：（左）暂停/继续；调节速度,保存（暂停后可以通过点击细胞修改其内部状态(ToolBar
+ *                                  （右）设定被修改的细胞会成为何种状态(EditBar
+ *                                  （上）待定
+ *                                  （下）部分数据显示（DataBar
  *
  * @Author Coco
  * @Create 2024/2/18 22:22
  * @Version 1.0
  */
 public class Viewer extends Application {
+    CellFieldViewer cellFieldViewer = new CellFieldViewer();
+    ToolBar toolBar = new ToolBar(cellFieldViewer);
 
     @Override
     public void start(Stage stage) throws Exception {
-        Button button = new Button("Coco");
-        Group group = new Group();
-        Scene scene = new Scene(group,600,400);
-        CellFieldViewer cellFieldViewer = new CellFieldViewer();
-        GridPane gridPane = cellFieldViewer.getGridPane();
-        System.out.println(gridPane);
-        stage.setTitle("化身天灾");
-        group.getChildren().add(gridPane);
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(cellFieldViewer.getGridPane());
+        borderPane.setLeft(toolBar.getBar());
 
+        cellFieldViewer.run();//今后把这个功能移动到组件里
 
-
-
-        cellFieldViewer.run();
-
-//        EventHandler<MouseEvent> eventHandler = mouseEvent -> {
-//            System.out.println("鼠标左键事件触发了");
-//        };
-//        rectangle.addEventHandler(MouseEvent.MOUSE_CLICKED,eventHandler);
-
+        Scene scene = new Scene(borderPane);
         stage.setScene(scene);
+        stage.setTitle("AutoCellCoco");
         stage.show();
     }
 }
