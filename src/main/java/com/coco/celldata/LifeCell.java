@@ -1,5 +1,7 @@
 package com.coco.celldata;
 
+import lombok.ToString;
+
 /**
  * ClassName:LifeCell
  * Package:com.coco.celldata
@@ -9,6 +11,7 @@ package com.coco.celldata;
  * @Create 2024/2/7 12:54
  * @Version 1.0
  */
+@ToString
 public class LifeCell extends Cell {
     private int status = 0;
 
@@ -91,5 +94,9 @@ public class LifeCell extends Cell {
 
     private void changeStatus() {
         status = status == 0 ? 1 : 0;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

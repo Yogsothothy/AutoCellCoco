@@ -1,11 +1,14 @@
 package com.coco.application;
 
 import com.coco.application.components.CellFieldViewer;
+import com.coco.application.components.EditBar;
 import com.coco.application.components.ToolBar;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
+import java.util.Map;
 
 /**
  * ClassName: Application
@@ -23,13 +26,21 @@ import javafx.stage.Stage;
  */
 public class Viewer extends Application {
     CellFieldViewer cellFieldViewer = new CellFieldViewer();
+    ApplicationStorage storage = ApplicationStorage.getInstance();
     ToolBar toolBar = new ToolBar(cellFieldViewer);
+    EditBar editBar = new EditBar();
 
     @Override
     public void start(Stage stage) throws Exception {
+        Map map = storage.getMap();
+        map.put("editBar",editBar);
+        System.out.println(map.get("editBar"));
+        cellFieldViewer.init();
+
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(cellFieldViewer.getGridPane());
         borderPane.setLeft(toolBar.getBar());
+        borderPane.setRight(editBar.getBar());
 
         cellFieldViewer.run();//今后把这个功能移动到组件里
 

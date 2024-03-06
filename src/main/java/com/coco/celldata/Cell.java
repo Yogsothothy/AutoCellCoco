@@ -66,4 +66,7 @@ public abstract class Cell {
      */
     abstract public void copy(Cell tempCell);
     abstract public int getStatus();
+
+    public void setStatus(int status) {
+    }
 }
