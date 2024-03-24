@@ -21,7 +21,6 @@ public class ToolBar {
     private CellFieldViewer cellFieldViewer;
     private String startText = "开始/停止";
     private Text speedText = new Text("速度：");
-//    private Slider speedSlider = new Slider(0, 1999, 1900);
     ToggleGroup speedButtonGroup = new ToggleGroup();
     RadioButton slowRadioButton = new RadioButton();
     RadioButton normalRadioButton = new RadioButton();
@@ -60,7 +59,7 @@ public class ToolBar {
     private void start() {
         cellFieldViewer.changePauseFlag();
         if(speedButtonGroup.getSelectedToggle() == slowRadioButton) {
-            cellFieldViewer.setRunSpeed(1000);
+            cellFieldViewer.setRunSpeed(500);
         }else if (speedButtonGroup.getSelectedToggle() == quickRadioButton)
         {
             cellFieldViewer.setRunSpeed(0);

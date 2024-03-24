@@ -9,7 +9,6 @@ public class CellCube {
     private int x;
     private int y;
     private CellField cellField = CellField.getInstance();
-    private EditBar editBar;
     private Rectangle cellCube = new Rectangle(10, 10);
 
     public void setStatus(int status) {
@@ -30,13 +29,11 @@ public class CellCube {
     }
 
     public void setEditBar(EditBar editBar) {
-        this.editBar = editBar;
     }
 
     public CellCube(int x, int y, EditBar editBar) {
         this.x = x;
         this.y = y;
-        this.editBar = editBar;
         //在此编写CellCube被点击之后的事件
         cellCube.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             setStatus(editBar.getCell().getStatus());
