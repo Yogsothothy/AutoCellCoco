@@ -3,11 +3,13 @@ package com.coco.application.components;
 import com.coco.application.ApplicationStorage;
 import com.coco.celldata.Cell;
 import com.coco.celldata.CellField;
-import com.coco.celldata.LifeCell;
-import com.coco.service.RoundService;
+import com.coco.celldata.CovidCell;
+import com.coco.service.CovidService;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,10 @@ public class CellFieldViewer {
     private final CellField field = CellField.getInstance();
     /**
      * 用一个网格窗格来容纳细胞，每个细胞对应其中一格
+     * -- GETTER --
+     *  返回这个组件
      */
+    @Getter
     private final GridPane gridPane = new GridPane();
     /**
      * 这个正方形数组会容纳Cell数组里的信息
@@ -36,11 +41,14 @@ public class CellFieldViewer {
     /**
      * 在这个类中需要调用roundService
      */
-    RoundService roundService = new RoundService();
+//    RoundService roundService = new RoundService();
+    CovidService roundService = new CovidService();
     /**
      * 通过这个变量的值控制程序是否暂停
      */
     private boolean pauseFlag = true;
+    @Getter
+    @Setter
     private int runSpeed = 100;
 
     /**
@@ -59,19 +67,14 @@ public class CellFieldViewer {
         gridPane.setVgap(1);
         //用黑色的实线来分隔每一个格子。
         gridPane.setGridLinesVisible(true);
-        field.fieldIni(LifeCell.class);
+//        field.fieldIni(LifeCell.class);
+        field.fieldIni(CovidCell.class);
         //
         roundService.randomIni();
         //根据field里的信息来初始化整个图形区域，这里需要进一步修改来降低耦合度（也许不用
         for (int x = 0; x < field.getWidth(); x++) {
             for (int y = 0; y < field.getHeight(); y++) {
-//                Rectangle rectangle = new Rectangle(10, 10);
                 CellCube cellCube = new CellCube(x, y,(EditBar) map.get("editBar"));
-//                if (field.getCell(x, y).getStatus() == 0) {
-//                    rectangle.setFill(Color.WHITE);
-//                } else {
-//                    rectangle.setFill(Color.BLACK);
-//                }
                 if (field.getCell(x, y).getStatus() == 0) {
                     cellCube.setStatus(0);
                 } else {
@@ -104,10 +107,12 @@ public class CellFieldViewer {
                 //将cell的更新作用到图形界面上
                 //TODO 为了未来用在疫情模拟上，这里需要更丰富的色彩（至少4种
                 for (Cell cell : cellList) {
-                    if (cell.getStatus() == 1) {
+                    if (cell.getStatus() == 3) {
                         rectangles[cell.getX()][cell.getY()].setFill(Color.BLACK);
-                    } else {
+                    } else if (cell.getStatus() == 1){
                         rectangles[cell.getX()][cell.getY()].setFill(Color.WHITE);
+                    } else {
+                        rectangles[cell.getX()][cell.getY()].setFill(Color.GREY);
                     }
                 }
 
@@ -122,15 +127,6 @@ public class CellFieldViewer {
     }
 
     /**
-     * 返回这个组件
-     *
-     * @return gridPane
-     */
-    public GridPane getGridPane() {
-        return gridPane;
-    }
-
-    /**
      * pauseFlag的set方法
      */
     public void changePauseFlag() {
@@ -141,11 +137,4 @@ public class CellFieldViewer {
         return pauseFlag;
     }
 
-    public int getRunSpeed() {
-        return runSpeed;
-    }
-
-    public void setRunSpeed(int runSpeed) {
-        this.runSpeed = runSpeed;
-    }
 }

@@ -30,6 +30,7 @@ public abstract class Cell {
 
     /**
      * 在一回合中每个细胞都会调用一次该方法
+     * @return 如果细胞状态被改变了，会返回true，否则返回false。该返回值用于调用处统计被修改的细胞列表
      */
     abstract public boolean cellStrategy();
 
@@ -67,6 +68,5 @@ public abstract class Cell {
     abstract public void copy(Cell tempCell);
     abstract public int getStatus();
 
-    public void setStatus(int status) {
-    }
+    abstract public void setStatus(int status);
 }
