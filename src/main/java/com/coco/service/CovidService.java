@@ -2,6 +2,7 @@ package com.coco.service;
 
 import com.coco.celldata.Cell;
 import com.coco.celldata.CellField;
+import com.coco.celldata.CovidCell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class CovidService {
      * 获取CellField单例
      */
     CellField field = CellField.getInstance();
+    CovidCell cell = new CovidCell(0,0);
 
     /**
      * 元胞自动机每轮的演化
@@ -27,7 +29,8 @@ public class CovidService {
      */
     public List<Cell> next() {
         List<Cell> cells = new ArrayList<>();
-        field.getTempCell(0, 0).beforeRoundStrategy();
+//        field.getTempCell(0, 0).beforeRoundStrategy();
+        cell.beforeRoundStrategy();
         for (int x = 0; x < field.getWidth(); x++) {
             for (int y = 0; y < field.getHeight(); y++) {
                 Cell tempCell = field.getTempCell(x, y);
@@ -36,7 +39,8 @@ public class CovidService {
                 }
             }
         }
-        field.getTempCell(0, 0).afterRoundStrategy();
+//        field.getTempCell(0, 0).afterRoundStrategy();
+        cell.afterRoundStrategy();
         field.save();
         return cells;
     }

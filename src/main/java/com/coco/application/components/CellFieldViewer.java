@@ -30,7 +30,7 @@ public class CellFieldViewer {
     /**
      * 用一个网格窗格来容纳细胞，每个细胞对应其中一格
      * -- GETTER --
-     *  返回这个组件
+     * 返回这个组件
      */
     @Getter
     private final GridPane gridPane = new GridPane();
@@ -74,12 +74,13 @@ public class CellFieldViewer {
         //根据field里的信息来初始化整个图形区域，这里需要进一步修改来降低耦合度（也许不用
         for (int x = 0; x < field.getWidth(); x++) {
             for (int y = 0; y < field.getHeight(); y++) {
-                CellCube cellCube = new CellCube(x, y,(EditBar) map.get("editBar"));
-                if (field.getCell(x, y).getStatus() == 0) {
-                    cellCube.setStatus(0);
-                } else {
-                    cellCube.setStatus(1);
-                }
+                CellCube cellCube = new CellCube(x, y, (EditBar) map.get("editBar"));
+//                if (field.getCell(x, y).getStatus() == 0) {
+//                    cellCube.setStatus(0);
+//                } else {
+//                    cellCube.setStatus(1);
+//                }
+                cellCube.setStatus(field.getCell(x, y).getStatus());
                 gridPane.add(cellCube.getCellCube(), x, y);
                 rectangles[x][y] = cellCube.getCellCube();
             }
@@ -94,8 +95,6 @@ public class CellFieldViewer {
         new Thread(() -> {
             //每次循环是元胞自动机的一轮更新
             while (true) {
-                //执行策略使cellField内部的数据更新，并接收更新过的cell
-                List<Cell> cellList = roundService.next();
                 //在此检测是否应当暂停
                 while (pauseFlag) {
                     try {
@@ -104,24 +103,28 @@ public class CellFieldViewer {
                         e.printStackTrace();
                     }
                 }
-                //将cell的更新作用到图形界面上
-                //TODO 为了未来用在疫情模拟上，这里需要更丰富的色彩（至少4种
-                for (Cell cell : cellList) {
-                    if (cell.getStatus() == 3) {
-                        rectangles[cell.getX()][cell.getY()].setFill(Color.BLACK);
-                    } else if (cell.getStatus() == 1){
-                        rectangles[cell.getX()][cell.getY()].setFill(Color.WHITE);
-                    } else {
-                        rectangles[cell.getX()][cell.getY()].setFill(Color.GREY);
-                    }
-                }
-
                 //在此控制程序执行速度
                 try {
                     Thread.sleep(runSpeed);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                //执行策略使cellField内部的数据更新，并接收更新过的cell
+                List<Cell> cellList = roundService.next();
+
+                //将cell的更新作用到图形界面上
+                //TODO 为了未来用在疫情模拟上，这里需要更丰富的色彩（至少4种
+                for (Cell cell : cellList) {
+                    if (cell.getStatus() == 3) {
+                        rectangles[cell.getX()][cell.getY()].setFill(Color.BLACK);
+                    } else if (cell.getStatus() == 1) {
+                        rectangles[cell.getX()][cell.getY()].setFill(Color.WHITE);
+                    } else {
+                        rectangles[cell.getX()][cell.getY()].setFill(Color.GREY);
+                    }
+                }
+
+
             }
         }).start();
     }

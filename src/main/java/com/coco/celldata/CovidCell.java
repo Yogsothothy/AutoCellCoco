@@ -26,7 +26,7 @@ public class CovidCell extends Cell {
     /**
      * 所有被标记为公共场所的地点都被储存在这里
      */
-    private static final ArrayList<CovidCell> plazas = new ArrayList<>();
+    public static final ArrayList<CovidCell> plazas = new ArrayList<>();
     /**
      * 用于标识这个细胞代表什么场所
      */
@@ -170,13 +170,13 @@ public class CovidCell extends Cell {
         int status = 0;
         for (Person person : people) {
             if (person.getStatus() == PersonStatus.S || person.getStatus() == PersonStatus.R) {
-                status++;
+                status += 1;
                 break;
             }
         }
         for (Person person : people) {
             if (person.getStatus() == PersonStatus.E || person.getStatus() == PersonStatus.I) {
-                status++;
+                status += 2;
                 break;
             }
         }
@@ -188,7 +188,7 @@ public class CovidCell extends Cell {
      * 每位数代表一个属性。第一位是location，第二位是预设家庭情况。
      * 注意：setStatus和getStatus里的代码并不相同
      * location{0：住宅，1：过道，2：广场}
-     * home{0:无，1:独居青年，2：恋人同居，3：三口之家，4：老人小孩，5：留守老人，6：四世同堂}
+     * home{0:清空，1:独居青年，2：恋人同居，3：三口之家，4：老人小孩，5：留守老人，6：四世同堂，7：不变}
      *
      * @param status 状态代码
      */
@@ -203,32 +203,41 @@ public class CovidCell extends Cell {
         if (status % 10 == 2) {
             setLocation(LocationType.PLAZA);
         }
+        if (status / 10 == 0) {
+            people.clear();
+        }
         if (status / 10 == 1) {
+            people.clear();
             addPerson(new Person(PersonType.NORMAL, PersonStatus.S));
         }
         if (status / 10 == 2) {
+            people.clear();
             addPerson(new Person(PersonType.NORMAL, PersonStatus.S));
             addPerson(new Person(PersonType.NORMAL, PersonStatus.S));
         }
         if (status / 10 == 3) {
+            people.clear();
             addPerson(new Person(PersonType.NORMAL, PersonStatus.S));
             addPerson(new Person(PersonType.NORMAL, PersonStatus.S));
             addPerson(new Person(PersonType.CHILD, PersonStatus.S));
         }
         if (status / 10 == 4) {
+            people.clear();
             addPerson(new Person(PersonType.OLD, PersonStatus.S));
             addPerson(new Person(PersonType.CHILD, PersonStatus.S));
         }
         if (status / 10 == 5) {
+            people.clear();
             addPerson(new Person(PersonType.OLD, PersonStatus.S));
             addPerson(new Person(PersonType.OLD, PersonStatus.S));
 
         }
         if (status / 10 == 6) {
+            people.clear();
             addPerson(new Person(PersonType.NORMAL, PersonStatus.S));
             addPerson(new Person(PersonType.CHILD, PersonStatus.S));
             addPerson(new Person(PersonType.NORMAL, PersonStatus.S));
-            addPerson(new Person(PersonType.OLD, PersonStatus.S));
+            addPerson(new Person(PersonType.OLD, PersonStatus.I));
         }
     }
 
@@ -241,9 +250,12 @@ public class CovidCell extends Cell {
      */
     private CovidCell searchAisle() {
         for (int n = 1; n < field.getWidth(); n++) {
-            for (int x = -n; x < n; x++) {
-                for (int y = -n; y < n; y++) {
-                    if (!(x >= -(n - 1) && x <= (n - 1)) && (y >= -(n - 1) && y <= (n - 1))) {
+            for (int x = this.x - n; x <= this.x + n; x++) {
+                for (int y = this.y - n; y <= this.y + n; y++) {
+                    if (x < 0 || x >= field.getWidth() || y < 0 || y >= field.getHeight()) {
+                        continue;
+                    }
+                    if (!(x > this.x - n && x < this.x + n) && (y > this.y - n && y < this.y + n)) {
                         Cell cell = field.getCell(x, y);
                         if (cell instanceof CovidCell covidCell) {
                             if (covidCell.location == LocationType.AISLE) {

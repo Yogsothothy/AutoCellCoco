@@ -12,7 +12,6 @@ import lombok.ToString;
  * @Create 2024/3/27 14:37
  * @Version 1.0
  */
-@ToString
 @AllArgsConstructor
 public enum LocationType {
     HOUSE("住宅","人们居住于此",0),
@@ -21,4 +20,9 @@ public enum LocationType {
     private final String TYPENAME;
     private final String TYPEINFO;
     public final Integer CODE;
+
+    @Override
+    public String toString() {
+        return TYPENAME;
+    }
 }
