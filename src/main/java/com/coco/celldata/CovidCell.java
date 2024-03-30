@@ -36,7 +36,6 @@ public class CovidCell extends Cell {
     /**
      * 一个场所里的人员列表。住宅里的人员是固定的，而过道和公共场所里的人员则是通过每天运算得出
      */
-    @Getter
     private final ArrayList<Person> people = new ArrayList<>();
 
     public CovidCell(int x, int y, LocationType location) {
@@ -64,7 +63,7 @@ public class CovidCell extends Cell {
         if (location == LocationType.HOUSE) {
             //存在感染者
             //家庭中的感染暂定为每天40%概率
-            if (getStatus() == 1) {
+            if (getStatus() == 3) {
                 for (Person person : people) {
                     if (random.nextDouble() < 0.4) {
                         person.setStatus(PersonStatus.E);
@@ -75,7 +74,7 @@ public class CovidCell extends Cell {
         if (location == LocationType.AISLE) {
             //存在感染者
             //过道中的感染暂定为每天5%概率
-            if (getStatus() == 1) {
+            if (getStatus() == 3) {
                 for (Person person : people) {
                     if (random.nextDouble() < 0.05) {
                         person.setStatus(PersonStatus.E);
@@ -86,7 +85,7 @@ public class CovidCell extends Cell {
         if (location == LocationType.PLAZA) {
             //存在感染者
             //公共场合中的感染暂定为每天10%概率
-            if (getStatus() == 1) {
+            if (getStatus() == 3) {
                 for (Person person : people) {
                     if (random.nextDouble() < 0.1) {
                         person.setStatus(PersonStatus.E);
@@ -104,7 +103,7 @@ public class CovidCell extends Cell {
     public void beforeRoundStrategy() {
         for (int x = 0; x < field.getWidth(); x++) {
             for (int y = 0; y < field.getHeight(); y++) {
-                if (location == LocationType.HOUSE) {
+                if (((CovidCell)field.getTempCell(x,y)).getLocation() == LocationType.HOUSE) {
                     CovidCell aisle = searchAisle();
                     ArrayList<Person> list = ((CovidCell) field.getTempCell(x, y)).getPeople();
                     for (Person person : list) {
@@ -113,7 +112,7 @@ public class CovidCell extends Cell {
                             assert aisle != null;
                             aisle.getPeople().add(person);
                             CovidCell plaza = plazas.get(random.nextInt(0, plazas.size()));
-                            plaza.getPeople().add(person);
+                            plaza.getPeople().add(person);//这句话会引起异常
                         }
                     }
                 }
@@ -271,5 +270,9 @@ public class CovidCell extends Cell {
 
     public void addPerson(Person person) {
         this.people.add(person);
+    }
+
+    public ArrayList<Person> getPeople() {
+        return people;
     }
 }

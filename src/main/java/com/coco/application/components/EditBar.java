@@ -1,6 +1,5 @@
 package com.coco.application.components;
 
-import com.coco.celldata.LifeCell;
 import com.coco.utils.LocationType;
 import com.coco.utils.PersonStatus;
 import javafx.scene.control.Button;

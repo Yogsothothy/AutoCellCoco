@@ -5,6 +5,7 @@ import com.coco.celldata.Cell;
 import com.coco.celldata.CellField;
 import com.coco.celldata.CovidCell;
 import com.coco.service.CovidService;
+import com.coco.utils.LocationType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -114,13 +115,28 @@ public class CellFieldViewer {
 
                 //将cell的更新作用到图形界面上
                 //TODO 为了未来用在疫情模拟上，这里需要更丰富的色彩（至少4种
-                for (Cell cell : cellList) {
-                    if (cell.getStatus() == 3) {
-                        rectangles[cell.getX()][cell.getY()].setFill(Color.BLACK);
-                    } else if (cell.getStatus() == 1) {
-                        rectangles[cell.getX()][cell.getY()].setFill(Color.WHITE);
-                    } else {
-                        rectangles[cell.getX()][cell.getY()].setFill(Color.GREY);
+//                for (Cell cell : cellList) {
+//                    if (cell.getStatus() == 3) {
+//                        rectangles[cell.getX()][cell.getY()].setFill(Color.BLACK);
+//                    } else if (cell.getStatus() == 1) {
+//                        rectangles[cell.getX()][cell.getY()].setFill(Color.WHITE);
+//                    } else {
+//                        rectangles[cell.getX()][cell.getY()].setFill(Color.GREY);
+//                    }
+//                }
+                //遍历所有的住宅并更新它们
+                for (int x = 0; x < field.getWidth(); x++) {
+                    for (int y = 0; y < field.getHeight(); y++) {
+                        CovidCell cell = ((CovidCell) field.getCell(x, y));
+                        if (cell.getLocation() == LocationType.HOUSE) {
+                            if (cell.getStatus() == 2) {
+                                rectangles[cell.getX()][cell.getY()].setFill(Color.BLACK);
+                            } else if (cell.getStatus() == 1) {
+                                rectangles[cell.getX()][cell.getY()].setFill(Color.WHITE);
+                            } else {
+                                rectangles[cell.getX()][cell.getY()].setFill(Color.GREY);
+                            }
+                        }
                     }
                 }
 

@@ -29,7 +29,6 @@ public class CovidService {
      */
     public List<Cell> next() {
         List<Cell> cells = new ArrayList<>();
-//        field.getTempCell(0, 0).beforeRoundStrategy();
         cell.beforeRoundStrategy();
         for (int x = 0; x < field.getWidth(); x++) {
             for (int y = 0; y < field.getHeight(); y++) {
@@ -39,7 +38,6 @@ public class CovidService {
                 }
             }
         }
-//        field.getTempCell(0, 0).afterRoundStrategy();
         cell.afterRoundStrategy();
         field.save();
         return cells;
