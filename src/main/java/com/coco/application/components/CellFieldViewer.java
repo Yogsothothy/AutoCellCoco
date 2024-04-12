@@ -4,14 +4,14 @@ import com.coco.application.ApplicationStorage;
 import com.coco.celldata.Cell;
 import com.coco.celldata.CellField;
 import com.coco.celldata.CovidCell;
+import com.coco.celldata.Person;
 import com.coco.service.CovidService;
 import com.coco.utils.LocationType;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +38,7 @@ public class CellFieldViewer {
     /**
      * 这个正方形数组会容纳Cell数组里的信息
      */
-    private final Rectangle[][] rectangles = new Rectangle[CellField.getInstance().getWidth()][CellField.getInstance().getHeight()];
+    private final CellCube[][] cellCubes = new CellCube[CellField.getInstance().getWidth()][CellField.getInstance().getHeight()];
     /**
      * 在这个类中需要调用roundService
      */
@@ -81,9 +81,9 @@ public class CellFieldViewer {
 //                } else {
 //                    cellCube.setStatus(1);
 //                }
-                cellCube.setStatus(field.getCell(x, y).getStatus());
-                gridPane.add(cellCube.getCellCube(), x, y);
-                rectangles[x][y] = cellCube.getCellCube();
+                cellCube.setLocation(((CovidCell)field.getCell(x, y)).getLocation().CODE);
+                gridPane.add(cellCube.getGroup(), x, y);
+                cellCubes[x][y] = cellCube;
             }
         }
     }
@@ -112,6 +112,26 @@ public class CellFieldViewer {
                 }
                 //执行策略使cellField内部的数据更新，并接收更新过的cell
                 List<Cell> cellList = roundService.next();
+                //TODO 更新画面（暂时只需要更新人的状态
+                for (int x = 0; x < field.getWidth(); x++) {
+                    for (int y = 0; y < field.getHeight(); y++) {
+                        CovidCell cell = ((CovidCell) field.getCell(x, y));
+                        if (cell.getLocation() == LocationType.HOUSE) {
+//                            if (cell.getStatus() == 2) {
+//                                rectangles[cell.getX()][cell.getY()].setFill(Color.BLACK);
+//                            } else if (cell.getStatus() == 1) {
+//                                rectangles[cell.getX()][cell.getY()].setFill(Color.WHITE);
+//                            } else {
+//                                rectangles[cell.getX()][cell.getY()].setFill(Color.GREY);
+//                            }
+                            ArrayList<Person> people = ((CovidCell) field.getTempCell(x, y)).getPeople();
+                            CellCube cube = cellCubes[x][y];
+                            for (int i = 0; i < people.size(); i++) {
+                                cube.setPersonStatus(i, people.get(i).getStatus());
+                            }
+                        }
+                    }
+                }
 
                 //将cell的更新作用到图形界面上
                 //TODO 为了未来用在疫情模拟上，这里需要更丰富的色彩（至少4种
@@ -125,22 +145,20 @@ public class CellFieldViewer {
 //                    }
 //                }
                 //遍历所有的住宅并更新它们
-                for (int x = 0; x < field.getWidth(); x++) {
-                    for (int y = 0; y < field.getHeight(); y++) {
-                        CovidCell cell = ((CovidCell) field.getCell(x, y));
-                        if (cell.getLocation() == LocationType.HOUSE) {
-                            if (cell.getStatus() == 2) {
-                                rectangles[cell.getX()][cell.getY()].setFill(Color.BLACK);
-                            } else if (cell.getStatus() == 1) {
-                                rectangles[cell.getX()][cell.getY()].setFill(Color.WHITE);
-                            } else {
-                                rectangles[cell.getX()][cell.getY()].setFill(Color.GREY);
-                            }
-                        }
-                    }
-                }
-
-
+//                for (int x = 0; x < field.getWidth(); x++) {
+//                    for (int y = 0; y < field.getHeight(); y++) {
+//                        CovidCell cell = ((CovidCell) field.getCell(x, y));
+//                        if (cell.getLocation() == LocationType.HOUSE) {
+//                            if (cell.getStatus() == 2) {
+//                                rectangles[cell.getX()][cell.getY()].setFill(Color.BLACK);
+//                            } else if (cell.getStatus() == 1) {
+//                                rectangles[cell.getX()][cell.getY()].setFill(Color.WHITE);
+//                            } else {
+//                                rectangles[cell.getX()][cell.getY()].setFill(Color.GREY);
+//                            }
+//                        }
+//                    }
+//                }
             }
         }).start();
     }
@@ -155,5 +173,4 @@ public class CellFieldViewer {
     public boolean getPauseFlag() {
         return pauseFlag;
     }
-
 }
