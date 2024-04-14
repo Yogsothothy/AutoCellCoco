@@ -76,7 +76,6 @@ public class CellCube {
         int personX = (index - 1) % 3 * 10;
         int personY = (index - 1) / 3 * 10;
         Rectangle person = new Rectangle(personX, personY, 10, 10);
-        person.setFill(Color.BLACK);
         if (personStatus == PersonStatus.E || personStatus == PersonStatus.I) {
             person.setFill(Color.RED);
         }
@@ -85,6 +84,9 @@ public class CellCube {
         }
         if (personStatus == PersonStatus.R) {
             person.setFill(Color.BLUE);
+        }
+        if (personStatus == PersonStatus.D){
+            person.setFill(Color.BLACK);
         }
         group.getChildren().add(person);
     }
@@ -104,6 +106,9 @@ public class CellCube {
         }
         if (status == PersonStatus.R) {
             ((Rectangle) group.getChildren().get(index + 1)).setFill(Color.BLUE);
+        }
+        if (status == PersonStatus.D) {
+            ((Rectangle) group.getChildren().get(index + 1)).setFill(Color.BLACK);
         }
     }
 

@@ -1,8 +1,8 @@
 package com.coco.utils;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
-
-import javax.naming.Name;
+import lombok.Getter;
 
 /**
  * ClassName:PersonStatus
@@ -18,8 +18,11 @@ public enum PersonStatus {
     S("S",1),
     E("E",2),
     I("I",3),
-    R("R",4);
+    R("R",4),
+    D("D",5);
     private final String NAME;
+    @JsonValue
+    @Getter
     public final Integer CODE;
 
     @Override

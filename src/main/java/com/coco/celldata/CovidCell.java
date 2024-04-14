@@ -3,7 +3,9 @@ package com.coco.celldata;
 import com.coco.utils.LocationType;
 import com.coco.utils.PersonStatus;
 import com.coco.utils.PersonType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.Random;
  * @Create 2024/3/26 13:09
  * @Version 1.0
  */
+@NoArgsConstructor
 public class CovidCell extends Cell {
     /**
      * TODO 不要每个Cell都new一个random
@@ -26,21 +29,30 @@ public class CovidCell extends Cell {
     /**
      * 所有被标记为公共场所的地点都被储存在这里
      */
-    public static final ArrayList<CovidCell> plazas = new ArrayList<>();
+    public static ArrayList<CovidCell> plazas = new ArrayList<>();
+
     /**
      * 用于标识这个细胞代表什么场所
      */
-    @Getter
     @Setter
+    @Getter
     private LocationType location;
     /**
      * 一个场所里的人员列表。住宅里的人员是固定的，而过道和公共场所里的人员则是通过每天运算得出
      */
-    private final ArrayList<Person> people = new ArrayList<>();
+    @Getter
+    @Setter
+    private ArrayList<Person> people = new ArrayList<>();
 
     public CovidCell(int x, int y, LocationType location) {
         super(x, y);
         this.location = location;
+    }
+
+    public CovidCell(int x, int y, LocationType location, ArrayList<Person> people) {
+        super(x, y);
+        this.location = location;
+        this.people = people;
     }
 
     /**
@@ -66,7 +78,9 @@ public class CovidCell extends Cell {
             if (getStatus() == 3) {
                 for (Person person : people) {
                     if (random.nextDouble() < 0.4) {
-                        person.setStatus(PersonStatus.E);
+                        if (person.getStatus() == PersonStatus.S) {
+                            person.setStatus(PersonStatus.E);
+                        }
                     }
                 }
             }
@@ -77,7 +91,9 @@ public class CovidCell extends Cell {
             if (getStatus() == 3) {
                 for (Person person : people) {
                     if (random.nextDouble() < 0.05) {
-                        person.setStatus(PersonStatus.E);
+                        if (person.getStatus() == PersonStatus.S) {
+                            person.setStatus(PersonStatus.E);
+                        }
                     }
                 }
             }
@@ -88,7 +104,9 @@ public class CovidCell extends Cell {
             if (getStatus() == 3) {
                 for (Person person : people) {
                     if (random.nextDouble() < 0.1) {
-                        person.setStatus(PersonStatus.E);
+                        if (person.getStatus() == PersonStatus.S) {
+                            person.setStatus(PersonStatus.E);
+                        }
                     }
                 }
             }
@@ -103,7 +121,7 @@ public class CovidCell extends Cell {
     public void beforeRoundStrategy() {
         for (int x = 0; x < field.getWidth(); x++) {
             for (int y = 0; y < field.getHeight(); y++) {
-                if (((CovidCell)field.getTempCell(x,y)).getLocation() == LocationType.HOUSE) {
+                if (((CovidCell) field.getTempCell(x, y)).getLocation() == LocationType.HOUSE) {
                     CovidCell aisle = searchAisle();
                     ArrayList<Person> list = ((CovidCell) field.getTempCell(x, y)).getPeople();
                     for (Person person : list) {
@@ -112,7 +130,7 @@ public class CovidCell extends Cell {
                             assert aisle != null;
                             aisle.getPeople().add(person);
                             CovidCell plaza = plazas.get(random.nextInt(0, plazas.size()));
-                            plaza.getPeople().add(person);//这句话会引起异常
+                            plaza.getPeople().add(person);
                         }
                     }
                 }
@@ -121,15 +139,44 @@ public class CovidCell extends Cell {
     }
 
     /**
-     * TODO 清除所有公共场合的人员列表
+     * 清除所有公共场合的人员列表
+     * TODO 判定感染者的演化状态
      */
     @Override
     public void afterRoundStrategy() {
         for (int x = 0; x < field.getWidth(); x++) {
             for (int y = 0; y < field.getHeight(); y++) {
+                ArrayList<Person> list = ((CovidCell) field.getTempCell(x, y)).getPeople();
                 if (location != LocationType.HOUSE) {
-                    ArrayList<Person> list = ((CovidCell) field.getTempCell(x, y)).getPeople();
                     list.clear();
+                }
+                if (location == LocationType.HOUSE) {
+                    for (Person person : list) {
+                        if (person.getStatus() == PersonStatus.E) {
+                            double p = random.nextDouble();
+                            //以1/15的概率转为有症状的感染者,1/30的概率痊愈
+                            if (p < 1.0 / 15.0) {
+//                                person.setStatus(PersonStatus.I);
+//                            } else if (random.nextDouble() < 1.0 / 30.0) {
+                                person.setStatus(PersonStatus.R);
+                            }
+                        }
+                        if (person.getStatus() == PersonStatus.I) {
+                            //以1/30的概率转为痊愈者
+                            double pR = 1.0 / 30.0;
+                            // 以某个概率转换为死者
+                            //通过计算概率得出一个值来使得 感染者的死亡率为9/1000
+                            double finalP = 9.0 / 1000.0;
+                            double pD = finalP / (1.0 - pR);
+                            //似乎finalP(9/1000)和痊愈率pS,死亡率pD的关系是finalP=(1-pS)*pD
+                            double p = random.nextDouble();
+                            if (p < pR) {
+                                person.setStatus(PersonStatus.R);
+                            } else if (p < pD + pR) {
+                                person.setStatus(PersonStatus.D);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -164,6 +211,7 @@ public class CovidCell extends Cell {
      *
      * @return 状态
      */
+    @JsonIgnore
     @Override
     public int getStatus() {
         int status = 0;
@@ -271,8 +319,15 @@ public class CovidCell extends Cell {
     public void addPerson(Person person) {
         this.people.add(person);
     }
-
-    public ArrayList<Person> getPeople() {
-        return people;
-    }
+//    public void setLocation(String location){
+//        if (Objects.equals(location, "HOUSE")){
+//            this.location=LocationType.HOUSE;
+//        }
+//        if (Objects.equals(location, "AISLE")){
+//            this.location=LocationType.AISLE;
+//        }
+//        if (Objects.equals(location, "PLAZA")){
+//            this.location=LocationType.PLAZA;
+//        }
+//    }
 }

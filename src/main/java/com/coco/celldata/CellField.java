@@ -102,4 +102,12 @@ public class CellField {
             }
         }
     }
+
+    public Cell[][] getField() {
+        return field;
+    }
+
+    public Cell[][] getTempField() {
+        return tempField;
+    }
 }

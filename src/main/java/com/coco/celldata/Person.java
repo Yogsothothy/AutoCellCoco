@@ -2,8 +2,8 @@ package com.coco.celldata;
 
 import com.coco.utils.PersonStatus;
 import com.coco.utils.PersonType;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -16,9 +16,27 @@ import lombok.Setter;
  * @Version 1.0
  */
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class Person {
-    private final PersonType personType;
+    @Setter
+    private PersonType personType;
     @Setter
     private PersonStatus status;
+    /**
+     * 标记一个人自从上次状态被改变之后已经经过了多少轮
+     * （可能没有用
+     */
+    @Setter
+    private int time = 0;
+
+    public Person(PersonType personType, PersonStatus status) {
+        this.personType = personType;
+        this.status = status;
+    }
+    public void addTime(){
+        time++;
+    }
+    public void resetTime(){
+        time=0;
+    }
 }

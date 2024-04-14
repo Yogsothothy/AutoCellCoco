@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class CellFieldViewer {
     private ApplicationStorage storage = ApplicationStorage.getInstance();
-    private final CellField field = CellField.getInstance();
+    private CellField field = CellField.getInstance();
     /**
      * 用一个网格窗格来容纳细胞，每个细胞对应其中一格
      * -- GETTER --

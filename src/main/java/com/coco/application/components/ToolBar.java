@@ -1,5 +1,7 @@
 package com.coco.application.components;
 
+import com.coco.celldata.CellField;
+import com.coco.utils.CSVUtil;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -21,6 +23,8 @@ public class ToolBar {
     private CellFieldViewer cellFieldViewer;
     private String startText = "开始/停止";
     private Text speedText = new Text("速度：");
+    private String saveDataText = "保存数据";
+    private String loadDataText = "读取数据";
     ToggleGroup speedButtonGroup = new ToggleGroup();
     RadioButton slowRadioButton = new RadioButton();
     RadioButton normalRadioButton = new RadioButton();
@@ -28,10 +32,14 @@ public class ToolBar {
     private HBox speedBar = new HBox(speedText, slowRadioButton, normalRadioButton, quickRadioButton);
     private final Button startButton = new Button(startText);
     private final VBox bar = new VBox();
+    private final Button saveDataButton = new Button(saveDataText);
+    private final Button loadDataButton = new Button(loadDataText);
 
     public ToolBar(CellFieldViewer cellFieldViewer) {
         bar.getChildren().add(startButton);
         bar.getChildren().add(speedBar);
+        bar.getChildren().add(saveDataButton);
+        bar.getChildren().add(loadDataButton);
 
         slowRadioButton.setToggleGroup(speedButtonGroup);
         normalRadioButton.setToggleGroup(speedButtonGroup);
@@ -46,6 +54,12 @@ public class ToolBar {
             } else {
                 pause();
             }
+        });
+        saveDataButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            CSVUtil.WriteField("a", CellField.getInstance());
+        });
+        loadDataButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            CSVUtil.ReadField();
         });
     }
 

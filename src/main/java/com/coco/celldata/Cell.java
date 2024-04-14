@@ -1,5 +1,8 @@
 package com.coco.celldata;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.NoArgsConstructor;
+
 /**
  * ClassName:Cell
  * Package:com.coco.celldata
@@ -9,11 +12,13 @@ package com.coco.celldata;
  * @Create 2024/2/7 14:46
  * @Version 1.0
  */
+@NoArgsConstructor
 public abstract class Cell {
 
     /**
      * 允许在Cell调用单例field里的方法
      */
+    @JsonIgnore
     CellField field = CellField.getInstance();
     /**
      * 细胞自身的横坐标
@@ -26,6 +31,7 @@ public abstract class Cell {
     /**
      * 当前细胞的状态
      */
+    @JsonIgnore
     int status;
 
     /**

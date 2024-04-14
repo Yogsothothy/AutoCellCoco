@@ -1,5 +1,8 @@
 package com.coco.utils;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
+
 /**
  * ClassName:PersonType
  * Package:com.coco.utils
@@ -13,6 +16,8 @@ public enum PersonType {
     NORMAL("成人","对疾病抵抗力正常"),
     CHILD("儿童","抵抗里一般"),
     OLD("老人","抵抗力较差，无法接种疫苗");
+    @JsonValue
+    @Getter
     private final String TypeName;
     private final String TypeInfo;
 
