@@ -22,6 +22,16 @@ public class Person {
     private PersonType personType;
     @Setter
     private PersonStatus status;
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "personType=" + personType +
+                ", status=" + status +
+                ", time=" + time +
+                '}';
+    }
+
     /**
      * 标记一个人自从上次状态被改变之后已经经过了多少轮
      * （可能没有用

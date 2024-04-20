@@ -38,6 +38,7 @@ public class CellFieldViewer {
     /**
      * 这个正方形数组会容纳Cell数组里的信息
      */
+    @Getter
     private final CellCube[][] cellCubes = new CellCube[CellField.getInstance().getWidth()][CellField.getInstance().getHeight()];
     /**
      * 在这个类中需要调用roundService

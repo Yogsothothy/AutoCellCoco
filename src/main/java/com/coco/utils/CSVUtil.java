@@ -10,6 +10,7 @@ import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 /**
  * ClassName:CSVUtil
@@ -22,10 +23,10 @@ import java.nio.charset.StandardCharsets;
  */
 public class CSVUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
-
     /**
      * 从外部csv文件中读取数据
      * TODO 把csv的数据直接加载到tempField里
+     * TODO 附加一些修改所有枚举类的代码
      */
     public static void ReadField() {
         String fileName = "a.csv";
@@ -36,22 +37,49 @@ public class CSVUtil {
                      StandardCharsets.UTF_8);
              CSVReader reader = new CSVReader(isr)) {
             String[] nextLine;
+            //每个While循环完成对一行的修改，每个for循环完成对一列的修改
             int x = 0;
             while ((nextLine = reader.readNext()) != null) {
                 Cell[][] tempField = field.getTempField();
                 int y = 0;
                 for (String e : nextLine) {
-                    if (nextLine.length == 1){
-                        CovidCell.plazas =objectMapper.readValue(nextLine[0],CovidCell.plazas.getClass());
-                        break;
+//                    if (nextLine.length == 1){
+//                        CovidCell.plazas =objectMapper.readValue(nextLine[0],CovidCell.plazas.getClass());
+//                        break;
+//                    }
+                    //把目标值赋给value
+                    HashMap hashMap = objectMapper.readValue(e, HashMap.class);
+                    CovidCell value = objectMapper.readValue(e, CovidCell.class);
+                    switch ((Integer) hashMap.get("location")){
+                        case 0:
+                            value.setLocation(LocationType.HOUSE);
+                            break;
+                        case 1:
+                            value.setLocation(LocationType.AISLE);
+                            break;
+                        case 2:
+                            value.setLocation(LocationType.PLAZA);
+                            break;
                     }
-                    tempField[x][y] = objectMapper.readValue(e, CovidCell.class);
+                    tempField[x][y].copy(value);
+                    System.out.println(value);
                     y++;
                 }
                 x++;
             }
         } catch (CsvValidationException | IOException e) {
             throw new RuntimeException(e);
+        }
+
+        field.save();
+        for (int x = 0; x < field.getWidth(); x++) {
+            for (int y = 0; y < field.getHeight(); y++) {
+                CovidCell cell = (CovidCell) field.getTempCell(x, y);
+                LocationType location = cell.getLocation();
+                if (location ==LocationType.PLAZA){
+                    CovidCell.plazas.add(cell);
+                }
+            }
         }
     }
 
@@ -73,7 +101,7 @@ public class CSVUtil {
                 }
                 writer.writeNext(cellsJson);
             }
-            writer.writeNext(new String[]{objectMapper.writeValueAsString(CovidCell.plazas)});
+//            writer.writeNext(new String[]{objectMapper.writeValueAsString(CovidCell.plazas)});
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

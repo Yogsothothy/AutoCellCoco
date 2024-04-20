@@ -114,6 +114,17 @@ public class CovidCell extends Cell {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "CovidCell{" +
+                "location=" + location +
+                ", people=" + people +
+                ", x=" + x +
+                ", y=" + y +
+                ", status=" + status +
+                '}';
+    }
+
     /**
      * 计算公共场所人员列表,这一步不产生影响界面显示的改变
      */
@@ -129,8 +140,14 @@ public class CovidCell extends Cell {
                         if (random.nextDouble() < 0.2) {
                             assert aisle != null;
                             aisle.getPeople().add(person);
-                            CovidCell plaza = plazas.get(random.nextInt(0, plazas.size()));
-                            plaza.getPeople().add(person);
+                            if (!plazas.isEmpty()) {
+                                CovidCell plaza = plazas.get(random.nextInt(0, plazas.size()));
+                                plaza.getPeople().add(person);
+                            }
+                            else {
+                                System.out.println("plazas为空");
+                            }
+
                         }
                     }
                 }
@@ -202,6 +219,7 @@ public class CovidCell extends Cell {
     @Override
     public void copy(Cell tempCell) {
         CovidCell covidCell = (CovidCell) tempCell;
+        this.setLocation(covidCell.getLocation());
         this.getPeople().clear();
         this.getPeople().addAll(covidCell.getPeople());
     }

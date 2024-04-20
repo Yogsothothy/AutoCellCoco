@@ -15,7 +15,9 @@ import lombok.Setter;
 import java.util.ArrayList;
 
 public class CellCube {
+    @Getter
     private int x;
+    @Getter
     private int y;
     private CellField cellField = CellField.getInstance();
     @Getter
