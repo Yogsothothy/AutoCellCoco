@@ -29,7 +29,7 @@ public class CSVUtil {
      * TODO 附加一些修改所有枚举类的代码
      */
     public static void ReadField() {
-        String fileName = "a.csv";
+        String fileName = "saves.csv";
         CellField field = CellField.getInstance();
 
         try (FileInputStream fis = new FileInputStream(fileName);
@@ -62,7 +62,6 @@ public class CSVUtil {
                             break;
                     }
                     tempField[x][y].copy(value);
-                    System.out.println(value);
                     y++;
                 }
                 x++;

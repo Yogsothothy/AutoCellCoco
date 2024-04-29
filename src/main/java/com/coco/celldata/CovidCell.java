@@ -90,7 +90,7 @@ public class CovidCell extends Cell {
             //过道中的感染暂定为每天5%概率
             if (getStatus() == 3) {
                 for (Person person : people) {
-                    if (random.nextDouble() < 0.05) {
+                    if (random.nextDouble() < 0.5) {
                         if (person.getStatus() == PersonStatus.S) {
                             person.setStatus(PersonStatus.E);
                         }
@@ -103,7 +103,7 @@ public class CovidCell extends Cell {
             //公共场合中的感染暂定为每天10%概率
             if (getStatus() == 3) {
                 for (Person person : people) {
-                    if (random.nextDouble() < 0.1) {
+                    if (random.nextDouble() < 0.5) {
                         if (person.getStatus() == PersonStatus.S) {
                             person.setStatus(PersonStatus.E);
                         }
@@ -164,10 +164,10 @@ public class CovidCell extends Cell {
         for (int x = 0; x < field.getWidth(); x++) {
             for (int y = 0; y < field.getHeight(); y++) {
                 ArrayList<Person> list = ((CovidCell) field.getTempCell(x, y)).getPeople();
-                if (location != LocationType.HOUSE) {
+                if (((CovidCell) field.getTempCell(x,y)).location != LocationType.HOUSE) {
                     list.clear();
                 }
-                if (location == LocationType.HOUSE) {
+                if (((CovidCell) field.getTempCell(x,y)).location == LocationType.HOUSE) {
                     for (Person person : list) {
                         if (person.getStatus() == PersonStatus.E) {
                             double p = random.nextDouble();
@@ -183,7 +183,7 @@ public class CovidCell extends Cell {
                             double pR = 1.0 / 30.0;
                             // 以某个概率转换为死者
                             //通过计算概率得出一个值来使得 感染者的死亡率为9/1000
-                            double finalP = 9.0 / 1000.0;
+                            double finalP = 90.0 / 1000.0;
                             double pD = finalP / (1.0 - pR);
                             //似乎finalP(9/1000)和痊愈率pS,死亡率pD的关系是finalP=(1-pS)*pD
                             double p = random.nextDouble();

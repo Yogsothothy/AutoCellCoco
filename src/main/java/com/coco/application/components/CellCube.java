@@ -1,5 +1,6 @@
 package com.coco.application.components;
 
+import com.coco.application.ApplicationStorage;
 import com.coco.celldata.CellField;
 import com.coco.celldata.CovidCell;
 import com.coco.celldata.Person;
@@ -25,6 +26,7 @@ public class CellCube {
     @Getter
     @Setter
     private Group group = new Group(cellCube);
+    private DataBar dataBar;
 
     public void setLocation(int locationCode) {
         switch (locationCode) {
@@ -56,6 +58,9 @@ public class CellCube {
 //                    group.getChildren().remove(1);
 //                }
                 clearPeople();
+                if (editBar.getCell().get("status") != 0) {
+                    editBar.getCell().put("personStatus", 7);
+                }
                 //使方块变色，使EditBar里的数据被复制到对应的Cell里
                 cellField.getCell(this.x, this.y).setStatus(editBar.getCell().get("status") + editBar.getCell().get("personStatus") * 10);
                 cellField.getTempCell(this.x, this.y).setStatus(editBar.getCell().get("status") + editBar.getCell().get("personStatus") * 10);
@@ -74,11 +79,15 @@ public class CellCube {
     }
 
     public void addPerson(PersonStatus personStatus) {
+        dataBar = (DataBar) ApplicationStorage.getInstance().getMap().get("dataBar");
         int index = group.getChildren().size();
         int personX = (index - 1) % 3 * 10;
         int personY = (index - 1) / 3 * 10;
         Rectangle person = new Rectangle(personX, personY, 10, 10);
-        if (personStatus == PersonStatus.E || personStatus == PersonStatus.I) {
+        if (personStatus == PersonStatus.E) {
+            person.setFill(Color.RED);
+        }
+        if (personStatus == PersonStatus.I) {
             person.setFill(Color.RED);
         }
         if (personStatus == PersonStatus.S) {
@@ -87,7 +96,7 @@ public class CellCube {
         if (personStatus == PersonStatus.R) {
             person.setFill(Color.BLUE);
         }
-        if (personStatus == PersonStatus.D){
+        if (personStatus == PersonStatus.D) {
             person.setFill(Color.BLACK);
         }
         group.getChildren().add(person);
@@ -100,10 +109,10 @@ public class CellCube {
     }
 
     public void setPersonStatus(int index, PersonStatus status) {
-        if (status  == PersonStatus.S) {
+        if (status == PersonStatus.S) {
             ((Rectangle) group.getChildren().get(index + 1)).setFill(Color.GREEN);
         }
-        if (status == PersonStatus.E || status == PersonStatus.I){
+        if (status == PersonStatus.E || status == PersonStatus.I) {
             ((Rectangle) group.getChildren().get(index + 1)).setFill(Color.RED);
         }
         if (status == PersonStatus.R) {
@@ -113,5 +122,4 @@ public class CellCube {
             ((Rectangle) group.getChildren().get(index + 1)).setFill(Color.BLACK);
         }
     }
-
 }

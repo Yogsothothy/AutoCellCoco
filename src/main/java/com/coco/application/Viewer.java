@@ -1,6 +1,7 @@
 package com.coco.application;
 
 import com.coco.application.components.CellFieldViewer;
+import com.coco.application.components.DataBar;
 import com.coco.application.components.EditBar;
 import com.coco.application.components.ToolBar;
 import javafx.application.Application;
@@ -29,18 +30,20 @@ public class Viewer extends Application {
     ApplicationStorage storage = ApplicationStorage.getInstance();
     ToolBar toolBar = new ToolBar(cellFieldViewer);
     EditBar editBar = new EditBar();
+    DataBar dataBar = new DataBar();
 
     @Override
     public void start(Stage stage) throws Exception {
         Map map = storage.getMap();
         map.put("editBar",editBar);
-        System.out.println(map.get("editBar"));
+        map.put("dataBar",dataBar);
         cellFieldViewer.init();
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(cellFieldViewer.getGridPane());
         borderPane.setLeft(toolBar.getBar());
         borderPane.setRight(editBar.getBar());
+        borderPane.setBottom(dataBar.getBar());
 
         cellFieldViewer.run();//今后把这个功能移动到组件里
 

@@ -1,44 +1,42 @@
 package com.coco;
 
-import javafx.scene.Scene;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-
-/**
- * ClassName:RightClickTest
- * Package:com.coco
- * Description:
- *
- * @Author Coco
- * @Create 2024/3/30 15:11
- * @Version 1.0
- */
 import javafx.application.Application;
-import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 
 public class RightClickButtonExample extends Application {
+    private Integer testNum = 0;
+    private final Text testText = new Text(testNum.toString());
+    VBox vBox = new VBox();
+    Button button = new Button("Test");
+
     @Override
     public void start(Stage primaryStage) {
-        Button button = new Button("右击我");
 
-        // 创建一个鼠标右击事件处理程序
-        EventHandler<MouseEvent> rightClickHandler = event -> {
-            if (event.getButton() == MouseButton.SECONDARY) {
-                System.out.println("helloworld");
-            }
-        };
+        HBox hBox = new HBox();
+        hBox.getChildren().add(new Text("Test:"));
+        hBox.getChildren().add(testText);
 
-        // 给按钮绑定鼠标右击事件处理程序
-        button.setOnMouseClicked(rightClickHandler);
+        HBox hBox1 = new HBox();
+        hBox1.getChildren().add(button);
+        button.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {
+            testNum++;
+            testText.setText(testNum.toString());
+        });
 
-        StackPane root = new StackPane(button);
-        Scene scene = new Scene(root, 200, 100);
-        primaryStage.setTitle("右击事件示例");
+        vBox.getChildren().add(hBox);
+        vBox.getChildren().add(hBox1);
+        Scene scene = new Scene(vBox);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+//    public static void main(String[] args) {
+//        Application.launch(RightClickButtonExample.class);
+//    }
 }

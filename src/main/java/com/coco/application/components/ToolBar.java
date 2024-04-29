@@ -62,7 +62,7 @@ public class ToolBar {
             }
         });
         saveDataButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            CSVUtil.WriteField("a", CellField.getInstance());
+            CSVUtil.WriteField("saves", CellField.getInstance());
         });
         loadDataButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             CSVUtil.ReadField();

@@ -53,6 +53,8 @@ public class CellFieldViewer {
     @Setter
     private int runSpeed = 100;
 
+    private DataBar dataBar;
+
     /**
      * 实例化的同时会初始化这个类
      */
@@ -82,11 +84,12 @@ public class CellFieldViewer {
 //                } else {
 //                    cellCube.setStatus(1);
 //                }
-                cellCube.setLocation(((CovidCell)field.getCell(x, y)).getLocation().CODE);
+                cellCube.setLocation(((CovidCell) field.getCell(x, y)).getLocation().CODE);
                 gridPane.add(cellCube.getGroup(), x, y);
                 cellCubes[x][y] = cellCube;
             }
         }
+        dataBar = (DataBar) map.get("dataBar");
     }
 
     /**
@@ -133,6 +136,7 @@ public class CellFieldViewer {
                         }
                     }
                 }
+                dataBar.update();
 
                 //将cell的更新作用到图形界面上
                 //TODO 为了未来用在疫情模拟上，这里需要更丰富的色彩（至少4种
