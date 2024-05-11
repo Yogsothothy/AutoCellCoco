@@ -1,11 +1,13 @@
 package com.coco.application.components;
 
+import com.coco.celldata.Person;
 import com.coco.utils.LocationType;
-import com.coco.utils.PersonStatus;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +18,10 @@ public class EditBar {
     private final Map<String, Integer> cell = new HashMap<>();
     private Button save = new Button("save");
     private final ChoiceBox<Integer> personStatusChoice = new ChoiceBox<>();
+    private final PersonBar personBar = new PersonBar();
+    private final Button addPersonButton = new Button("添加人员");
+    @Getter
+    private final ArrayList<Person> personList = new ArrayList<>();
 
     /**
      * TODO 加一个用来addPerson的按钮
@@ -42,8 +48,13 @@ public class EditBar {
             cell.put("status", statusChoice.getValue().CODE);
             cell.put("personStatus", personStatusChoice.getValue());
         });
+        addPersonButton.setOnAction(event -> {
+            personList.add(personBar.getPerson());
+        });
         bar.getChildren().add(statusChoice);
         bar.getChildren().add(personStatusChoice);
+        bar.getChildren().add(personBar.getBar());
+        bar.getChildren().add(addPersonButton);
         bar.getChildren().add(save);
     }
 

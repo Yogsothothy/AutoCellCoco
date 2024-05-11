@@ -69,6 +69,10 @@ public class CellCube {
                     CovidCell.plazas.add((CovidCell) cellField.getTempCell(x, y));
                 }
                 if (editBar.getCell().get("status") == 0) {
+                    for (Person person : editBar.getPersonList()) {
+                        ((CovidCell) (cellField.getCell(this.x, this.y))).addPerson(person);
+                        ((CovidCell) (cellField.getTempCell(this.x, this.y))).addPerson(person);
+                    }
                     ArrayList<Person> people = ((CovidCell) cellField.getTempCell(this.x, this.y)).getPeople();
                     for (Person person : people) {
                         addPerson(person.getStatus());

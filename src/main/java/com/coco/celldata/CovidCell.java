@@ -77,7 +77,7 @@ public class CovidCell extends Cell {
             //家庭中的感染暂定为每天40%概率
             if (getStatus() == 3) {
                 for (Person person : people) {
-                    if (random.nextDouble() < 0.4) {
+                    if (random.nextDouble() < person.getPersonType().chanceOfSToEI) {
                         if (person.getStatus() == PersonStatus.S) {
                             person.setStatus(PersonStatus.E);
                         }
@@ -90,7 +90,7 @@ public class CovidCell extends Cell {
             //过道中的感染暂定为每天5%概率
             if (getStatus() == 3) {
                 for (Person person : people) {
-                    if (random.nextDouble() < 0.5) {
+                    if (random.nextDouble() < person.getPersonType().chanceOfSToEI) {
                         if (person.getStatus() == PersonStatus.S) {
                             person.setStatus(PersonStatus.E);
                         }
@@ -103,7 +103,7 @@ public class CovidCell extends Cell {
             //公共场合中的感染暂定为每天10%概率
             if (getStatus() == 3) {
                 for (Person person : people) {
-                    if (random.nextDouble() < 0.5) {
+                    if (random.nextDouble() < person.getPersonType().chanceOfSToEI) {
                         if (person.getStatus() == PersonStatus.S) {
                             person.setStatus(PersonStatus.E);
                         }
@@ -136,8 +136,9 @@ public class CovidCell extends Cell {
                     CovidCell aisle = searchAisle();
                     ArrayList<Person> list = ((CovidCell) field.getTempCell(x, y)).getPeople();
                     for (Person person : list) {
-                        //假设每个人有0.2的机率出门去某个广场
-                        if (random.nextDouble() < 0.2) {
+                        //假设每个人有一定的机率出门去某个广场
+                        // TODO 这里的机率应该是可修改的，并且和人有关
+                        if (random.nextDouble() < person.getPersonType().chanceToGoOut) {
                             assert aisle != null;
                             aisle.getPeople().add(person);
                             if (!plazas.isEmpty()) {
@@ -147,7 +148,6 @@ public class CovidCell extends Cell {
                             else {
                                 System.out.println("plazas为空");
                             }
-
                         }
                     }
                 }
@@ -157,7 +157,8 @@ public class CovidCell extends Cell {
 
     /**
      * 清除所有公共场合的人员列表
-     * TODO 判定感染者的演化状态
+     * 判定感染者的演化状态
+     * TODO 区别不同类型的人的状态转化机率
      */
     @Override
     public void afterRoundStrategy() {
@@ -171,25 +172,19 @@ public class CovidCell extends Cell {
                     for (Person person : list) {
                         if (person.getStatus() == PersonStatus.E) {
                             double p = random.nextDouble();
-                            //以1/15的概率转为有症状的感染者,1/30的概率痊愈
-                            if (p < 1.0 / 15.0) {
-//                                person.setStatus(PersonStatus.I);
-//                            } else if (random.nextDouble() < 1.0 / 30.0) {
+                            //以某个概率转为有症状的感染者,另一个概率痊愈
+                            if (p < person.getPersonType().chanceOfEToI) {
+                                person.setStatus(PersonStatus.I);
+                            }
+                            if (p < person.getPersonType().chanceOfEIToR) {
                                 person.setStatus(PersonStatus.R);
                             }
                         }
                         if (person.getStatus() == PersonStatus.I) {
-                            //以1/30的概率转为痊愈者
-                            double pR = 1.0 / 30.0;
-                            // 以某个概率转换为死者
-                            //通过计算概率得出一个值来使得 感染者的死亡率为9/1000
-                            double finalP = 90.0 / 1000.0;
-                            double pD = finalP / (1.0 - pR);
-                            //似乎finalP(9/1000)和痊愈率pS,死亡率pD的关系是finalP=(1-pS)*pD
-                            double p = random.nextDouble();
-                            if (p < pR) {
+                            //以一定概率的概率转为痊愈者或死者
+                            if (random.nextDouble() < person.getPersonType().chanceOfEIToR) {
                                 person.setStatus(PersonStatus.R);
-                            } else if (p < pD + pR) {
+                            } else if (random.nextDouble() < person.getPersonType().chanceOfIToD) {
                                 person.setStatus(PersonStatus.D);
                             }
                         }
@@ -337,15 +332,4 @@ public class CovidCell extends Cell {
     public void addPerson(Person person) {
         this.people.add(person);
     }
-//    public void setLocation(String location){
-//        if (Objects.equals(location, "HOUSE")){
-//            this.location=LocationType.HOUSE;
-//        }
-//        if (Objects.equals(location, "AISLE")){
-//            this.location=LocationType.AISLE;
-//        }
-//        if (Objects.equals(location, "PLAZA")){
-//            this.location=LocationType.PLAZA;
-//        }
-//    }
 }

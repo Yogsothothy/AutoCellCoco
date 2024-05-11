@@ -1,9 +1,6 @@
 package com.coco.application;
 
-import com.coco.application.components.CellFieldViewer;
-import com.coco.application.components.DataBar;
-import com.coco.application.components.EditBar;
-import com.coco.application.components.ToolBar;
+import com.coco.application.components.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -31,6 +28,7 @@ public class Viewer extends Application {
     ToolBar toolBar = new ToolBar(cellFieldViewer);
     EditBar editBar = new EditBar();
     DataBar dataBar = new DataBar();
+    GlobalBar globalBar = new GlobalBar();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -44,6 +42,7 @@ public class Viewer extends Application {
         borderPane.setLeft(toolBar.getBar());
         borderPane.setRight(editBar.getBar());
         borderPane.setBottom(dataBar.getBar());
+        borderPane.setTop(globalBar.getBar());
 
         cellFieldViewer.run();//今后把这个功能移动到组件里
 
