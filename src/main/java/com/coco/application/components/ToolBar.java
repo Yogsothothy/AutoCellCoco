@@ -1,5 +1,7 @@
 package com.coco.application.components;
 
+import com.coco.application.ApplicationStorage;
+import com.coco.application.ChartPainter;
 import com.coco.celldata.CellField;
 import com.coco.celldata.CovidCell;
 import com.coco.celldata.Person;
@@ -29,6 +31,7 @@ public class ToolBar {
     private String saveDataText = "保存数据";
     private String loadDataText = "读取数据";
     private String testText = "调试";
+    private String chartText = "生成图表";
     ToggleGroup speedButtonGroup = new ToggleGroup();
     RadioButton slowRadioButton = new RadioButton();
     RadioButton normalRadioButton = new RadioButton();
@@ -39,13 +42,16 @@ public class ToolBar {
     private final Button saveDataButton = new Button(saveDataText);
     private final Button loadDataButton = new Button(loadDataText);
     private final Button testButton = new Button(testText);
+    private final Button chartButton = new Button(chartText);
+    private ChartPainter chartPainter;
 
     public ToolBar(CellFieldViewer cellFieldViewer) {
         bar.getChildren().add(startButton);
         bar.getChildren().add(speedBar);
         bar.getChildren().add(saveDataButton);
         bar.getChildren().add(loadDataButton);
-        bar.getChildren().add(testButton);
+//        bar.getChildren().add(testButton);
+        bar.getChildren().add(chartButton);
 
         slowRadioButton.setToggleGroup(speedButtonGroup);
         normalRadioButton.setToggleGroup(speedButtonGroup);
@@ -80,6 +86,12 @@ public class ToolBar {
         });
         testButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             System.out.println(field.getCell(0, 0).toString());
+        });
+        //TODO 这个图标的横纵坐标分别是：天数、感染者数。
+        //     每天采样。（不对再改
+        //     全局参数应当全部标注在适当位置（当然，我们可以手动标记
+        chartButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            ((ChartPainter) ApplicationStorage.getInstance().getMap().get("chartPainter")).paint();
         });
     }
 

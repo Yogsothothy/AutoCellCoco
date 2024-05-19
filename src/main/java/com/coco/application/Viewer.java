@@ -29,12 +29,14 @@ public class Viewer extends Application {
     EditBar editBar = new EditBar();
     DataBar dataBar = new DataBar();
     GlobalBar globalBar = new GlobalBar();
+    ChartPainter chartPainter = new ChartPainter();
 
     @Override
     public void start(Stage stage) throws Exception {
         Map map = storage.getMap();
         map.put("editBar",editBar);
         map.put("dataBar",dataBar);
+        map.put("chartPainter",chartPainter);
         cellFieldViewer.init();
 
         BorderPane borderPane = new BorderPane();
