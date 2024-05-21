@@ -6,6 +6,8 @@ import com.coco.celldata.CellField;
 import com.coco.celldata.CovidCell;
 import com.coco.celldata.Person;
 import com.coco.utils.CSVUtil;
+import com.coco.utils.PersonStatus;
+import com.coco.utils.PersonType;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -50,7 +52,7 @@ public class ToolBar {
         bar.getChildren().add(speedBar);
         bar.getChildren().add(saveDataButton);
         bar.getChildren().add(loadDataButton);
-//        bar.getChildren().add(testButton);
+        bar.getChildren().add(testButton);
         bar.getChildren().add(chartButton);
 
         slowRadioButton.setToggleGroup(speedButtonGroup);
@@ -85,7 +87,16 @@ public class ToolBar {
             }
         });
         testButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            System.out.println(field.getCell(0, 0).toString());
+//            System.out.println(field.getCell(0, 0).toString());
+            if (!CellField.pandemicLockdown) {
+                CellField.pandemicLockdown = true;
+                for (int i = 0; i < 8; i++) {
+                    CellField.nurseList.add(new Person(PersonType.NURSE, PersonStatus.S));
+                }
+            }else {
+                CellField.pandemicLockdown = false;
+                CellField.nurseList.clear();
+            }
         });
         //TODO 这个图标的横纵坐标分别是：天数、感染者数。
         //     每天采样。（不对再改

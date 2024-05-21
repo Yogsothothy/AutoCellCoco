@@ -13,9 +13,10 @@ import lombok.Getter;
  * @Version 1.0
  */
 public enum PersonType {
-    NORMAL("成人", "对疾病抵抗力正常", 0, 0.5, 0.5, 0.5, 0.5, 0.5),
-    CHILD("儿童", "抵抗里一般", 1, 0.5, 0.5, 0.5, 0.5, 0.5),
-    OLD("老人", "抵抗力较差，无法接种疫苗", 2, 0.5, 0.5, 0.5, 0.5, 0.5);
+    NORMAL("成人", "对疾病抵抗力正常", 0, 0.2, 0.3, 0.07, 0.01, 0.2),
+    CHILD("儿童", "抵抗里一般", 1, 0.2, 0.3, 0.07, 0.01, 0.2),
+    OLD("老人", "抵抗力较差，无法接种疫苗", 2, 0.2, 0.3, 0.07, 0.01, 0.2),
+    NURSE("医护人员", "不受封控影响，全副武装", 3, 0.5, 0.3, 0.2, 0, 0.2);
     @JsonValue
     @Getter
     private final String TypeName;
@@ -23,17 +24,17 @@ public enum PersonType {
     public final int CODE;
     public double chanceToGoOut;
     public double chanceOfSToEI;
-    public double chanceOfEIToR;
+    public double chanceOfIToR;
     public double chanceOfIToD;
     public double chanceOfEToI;
 
-    PersonType(String typeName, String typeInfo, int CODE, double chanceToGoOut, double chanceOfSToEI, double chanceOfEIToR, double chanceOfIToD, double chanceOfEToI) {
+    PersonType(String typeName, String typeInfo, int CODE, double chanceToGoOut, double chanceOfSToEI, double chanceOfIToR, double chanceOfIToD, double chanceOfEToI) {
         TypeName = typeName;
         TypeInfo = typeInfo;
         this.CODE = CODE;
         this.chanceToGoOut = chanceToGoOut;
         this.chanceOfSToEI = chanceOfSToEI;
-        this.chanceOfEIToR = chanceOfEIToR;
+        this.chanceOfIToR = chanceOfIToR;
         this.chanceOfIToD = chanceOfIToD;
         this.chanceOfEToI = chanceOfEToI;
     }

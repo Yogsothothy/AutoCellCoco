@@ -1,6 +1,7 @@
 package com.coco.celldata;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 /**
  * ClassName:CellField
@@ -41,6 +42,8 @@ public class CellField {
     public int getHeight() {
         return height;
     }
+    public static boolean pandemicLockdown = false;
+    public static ArrayList<Person> nurseList = new ArrayList<>();
 
     static {
         instance = new CellField();

@@ -133,7 +133,7 @@ public class CellFieldViewer {
                     }
                 }
                 dataBar.update();
-                chartPainter.sample(dataBar.getENum() + dataBar.getINum(), dataBar.getDate());
+                chartPainter.sample(dataBar.getENum() + dataBar.getINum(),dataBar.getDNum(), dataBar.getDate());
             }
         }).start();
     }

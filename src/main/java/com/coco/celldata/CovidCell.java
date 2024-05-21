@@ -138,17 +138,23 @@ public class CovidCell extends Cell {
                     for (Person person : list) {
                         //假设每个人有一定的机率出门去某个广场
                         // TODO 这里的机率应该是可修改的，并且和人有关
+                        if (CellField.pandemicLockdown) {
+                            break;
+                        }
                         if (random.nextDouble() < person.getPersonType().chanceToGoOut) {
                             assert aisle != null;
                             aisle.getPeople().add(person);
                             if (!plazas.isEmpty()) {
                                 CovidCell plaza = plazas.get(random.nextInt(0, plazas.size()));
                                 plaza.getPeople().add(person);
-                            }
-                            else {
+                            } else {
                                 System.out.println("plazas为空");
                             }
                         }
+                    }
+                    //如果封控开始了，医护人员会开始活动
+                    if (CellField.pandemicLockdown) {
+                        list.add(CellField.nurseList.get(random.nextInt(8)));
                     }
                 }
             }
@@ -165,29 +171,30 @@ public class CovidCell extends Cell {
         for (int x = 0; x < field.getWidth(); x++) {
             for (int y = 0; y < field.getHeight(); y++) {
                 ArrayList<Person> list = ((CovidCell) field.getTempCell(x, y)).getPeople();
-                if (((CovidCell) field.getTempCell(x,y)).location != LocationType.HOUSE) {
+                if (((CovidCell) field.getTempCell(x, y)).location != LocationType.HOUSE) {
                     list.clear();
                 }
-                if (((CovidCell) field.getTempCell(x,y)).location == LocationType.HOUSE) {
+                if (((CovidCell) field.getTempCell(x, y)).location == LocationType.HOUSE) {
                     for (Person person : list) {
                         if (person.getStatus() == PersonStatus.E) {
-                            double p = random.nextDouble();
                             //以某个概率转为有症状的感染者,另一个概率痊愈
-                            if (p < person.getPersonType().chanceOfEToI) {
+                            if (random.nextDouble() < person.getPersonType().chanceOfEToI) {
                                 person.setStatus(PersonStatus.I);
-                            }
-                            if (p < person.getPersonType().chanceOfEIToR) {
+                            } else if (random.nextDouble() < person.getPersonType().chanceOfIToR) {
                                 person.setStatus(PersonStatus.R);
                             }
                         }
                         if (person.getStatus() == PersonStatus.I) {
                             //以一定概率的概率转为痊愈者或死者
-                            if (random.nextDouble() < person.getPersonType().chanceOfEIToR) {
-                                person.setStatus(PersonStatus.R);
-                            } else if (random.nextDouble() < person.getPersonType().chanceOfIToD) {
+                            if (random.nextDouble() < person.getPersonType().chanceOfIToD) {
                                 person.setStatus(PersonStatus.D);
+                            } else if (random.nextDouble() < person.getPersonType().chanceOfIToR) {
+                                person.setStatus(PersonStatus.R);
                             }
                         }
+                    }
+                    if (CellField.pandemicLockdown) {
+                        list.remove(list.size() - 1);
                     }
                 }
             }
@@ -268,7 +275,8 @@ public class CovidCell extends Cell {
         }
         if (status / 10 == 1) {
             people.clear();
-            addPerson(new Person(PersonType.NORMAL, PersonStatus.S));
+            addPerson(new Person(PersonType.NURSE, PersonStatus.S));
+            addPerson(new Person(PersonType.NURSE, PersonStatus.S));
         }
         if (status / 10 == 2) {
             people.clear();

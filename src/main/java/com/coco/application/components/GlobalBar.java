@@ -8,6 +8,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import lombok.Getter;
 
+import java.util.Objects;
+
 /**
  * ClassName:GlobalBar
  * Package:com.coco.application.components
@@ -47,11 +49,21 @@ public class GlobalBar {
         typeChoice.setValue(PersonType.NORMAL);
 
         save.setOnAction(event -> {
-            typeChoice.getValue().chanceToGoOut = Integer.parseInt(goOutField.getText());
-            typeChoice.getValue().chanceOfSToEI = Integer.parseInt(SToEIField.getText());
-            typeChoice.getValue().chanceOfEIToR = Integer.parseInt(EIToRField.getText());
-            typeChoice.getValue().chanceOfIToD = Integer.parseInt(IToDField.getText());
-            typeChoice.getValue().chanceOfEToI = Integer.parseInt(EToIField.getText());
+            if (!Objects.equals(goOutField.getText(), "")) {
+                typeChoice.getValue().chanceToGoOut = Double.parseDouble(goOutField.getText());
+            }
+            if (!Objects.equals(SToEIField.getText(), "")) {
+                typeChoice.getValue().chanceOfSToEI = Double.parseDouble(SToEIField.getText());
+            }
+            if (!Objects.equals(EIToRField.getText(), "")) {
+                typeChoice.getValue().chanceOfIToR = Double.parseDouble(EIToRField.getText());
+            }
+            if (!Objects.equals(IToDField.getText(), "")) {
+                typeChoice.getValue().chanceOfIToD = Double.parseDouble(IToDField.getText());
+            }
+            if (!Objects.equals(EToIField.getText(), "")) {
+                typeChoice.getValue().chanceOfEToI = Double.parseDouble(EToIField.getText());
+            }
         });
         bar.getChildren().add(typeChoiceText);
         bar.getChildren().add(typeChoice);

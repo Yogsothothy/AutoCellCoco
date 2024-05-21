@@ -19,7 +19,8 @@ import java.util.Objects;
 public enum LocationType {
     HOUSE("住宅", "人们居住于此", 0),
     AISLE("过道", "人们去往公共场所时必须经过至少一个过道", 1),
-    PLAZA("广场", "人们聚集于此", 2);
+    PLAZA("广场", "人们聚集于此", 2),
+    HOSPITAL("医疗点", "医护人员的据点", 3);
     private final String TYPENAME;
     private final String TYPEINFO;
     public final Integer CODE;
